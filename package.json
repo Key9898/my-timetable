@@ -1,0 +1,12 @@
+{
+    "name": "my-timetable-root",
+    "private": true,
+    "scripts": {
+        "dev": "npm run dev --prefix mytimetable",
+        "build": "npm run build --prefix mytimetable",
+        "lint": "npm run lint --prefix mytimetable",
+        "format": "prettier --write .",
+        "preview": "npm run preview --prefix mytimetable",
+        "storybook": "npm run storybook --prefix mytimetable"
+    }
+}
