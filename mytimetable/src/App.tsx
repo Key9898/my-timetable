@@ -1,7 +1,12 @@
-import Home from './pages/Home'
+import Home from './pages/Home';
+import { TimetableProvider } from './contexts/TimetableContext';
 
 function App() {
-  return <Home />
+  return (
+    <TimetableProvider>
+      <Home />
+    </TimetableProvider>
+  )
 }
 
 export default App
