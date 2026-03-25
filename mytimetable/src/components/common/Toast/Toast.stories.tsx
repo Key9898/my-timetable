@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ToastProvider } from '../../../contexts/ToastProvider';
-import { type ToastType } from '../../../contexts/ToastContext';
 import { useToastContext } from '../../../hooks/useToastContext'
 import Toast from './Toast'
 import Button from '../../ui/Button'
