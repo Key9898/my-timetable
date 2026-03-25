@@ -1,25 +1,46 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@import 'tailwindcss';
+@plugin 'daisyui';
 
-@plugin "daisyui/theme" { 
-   name: "winter"; 
-   default: true; 
-   prefersdark: false; 
-   color-scheme: "light"; /* Changed back to light for winter */
-   
-   --color-primary: oklch(0.65 0.2 300); /* Purple vibrant */
-   --color-primary-content: oklch(0.98 0.01 300);
-   --color-secondary: oklch(0.6 0.25 260); /* Sapphire blue accent */
-   --color-accent: oklch(0.7 0.15 150); /* Emerald accent */
-   
-   --color-base-100: oklch(0.98 0.005 260); /* Fresh white */
-   --color-base-200: oklch(0.95 0.01 260);
-   --color-base-300: oklch(0.9 0.02 260);
-   --color-base-content: oklch(0.2 0.05 260);
-   
-   --radius-selector: 1rem; 
-   --radius-field: 1rem; 
-   --radius-box: 1.5rem; 
+@plugin 'daisyui/theme' {
+  name: 'winter';
+  default: true;
+  prefersdark: false;
+  color-scheme: 'light'; /* Changed back to light for winter */
+
+  --color-primary: oklch(0.65 0.2 300); /* Purple vibrant */
+  --color-primary-content: oklch(0.98 0.01 300);
+  --color-secondary: oklch(0.6 0.25 260); /* Sapphire blue accent */
+  --color-accent: oklch(0.7 0.15 150); /* Emerald accent */
+
+  --color-base-100: oklch(0.98 0.005 260); /* Fresh white */
+  --color-base-200: oklch(0.95 0.01 260);
+  --color-base-300: oklch(0.9 0.02 260);
+  --color-base-content: oklch(0.2 0.05 260);
+
+  --radius-selector: 1rem;
+  --radius-field: 1rem;
+  --radius-box: 1.5rem;
+}
+
+@plugin 'daisyui/theme' {
+  name: 'dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: 'dark';
+
+  --color-primary: oklch(0.7 0.2 300); /* Slightly lighter purple for dark */
+  --color-primary-content: oklch(0.1 0.05 300);
+  --color-secondary: oklch(0.65 0.2 260);
+  --color-accent: oklch(0.75 0.15 150);
+
+  --color-base-100: oklch(0.15 0.02 260); /* Deep midnight blue-grey */
+  --color-base-200: oklch(0.12 0.02 260);
+  --color-base-300: oklch(0.1 0.02 260);
+  --color-base-content: oklch(0.95 0.01 260);
+
+  --radius-selector: 1rem;
+  --radius-field: 1rem;
+  --radius-box: 1.5rem;
 }
 
 @layer base {
@@ -31,15 +52,25 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
+    @apply shadow-base-content/5 rounded-[2.5rem] border border-white/60 bg-white/70 shadow-xl backdrop-blur-3xl transition-all duration-300;
+  }
+
+  :where(.dark) .glass-card {
+    @apply bg-base-200/50 border-white/10 shadow-2xl shadow-black/20;
   }
 }
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .float-animation {

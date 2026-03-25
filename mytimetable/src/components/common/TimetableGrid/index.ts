@@ -1,2 +1,2 @@
-export { default } from './TimetableGrid';
-export * from './TimetableGrid';
+export { default } from './TimetableGrid'
+export * from './TimetableGrid'

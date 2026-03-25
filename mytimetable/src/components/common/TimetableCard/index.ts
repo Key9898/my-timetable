@@ -1,2 +1,2 @@
-export { default } from './TimetableCard';
-export * from './TimetableCard';
+export { default } from './TimetableCard'
+export * from './TimetableCard'

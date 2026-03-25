@@ -1,101 +1,155 @@
-import { type FC } from 'react';
-import { useTimetable } from '../../hooks/useTimetable';
-import TimetableCard from '../../components/common/TimetableCard/TimetableCard';
-import TimetableGrid from '../../components/common/TimetableGrid/TimetableGrid';
-import type { TimetableItem } from '../../models/Timetable';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarClock, AlertCircle } from 'lucide-react';
+import { type FC } from 'react'
+import { useTimetable } from '../../hooks/useTimetable'
+import TimetableCard from '../../components/common/TimetableCard/TimetableCard'
+import TimetableGrid from '../../components/common/TimetableGrid/TimetableGrid'
+import type { TimetableItem } from '../../models/Timetable'
+import { AnimatePresence, motion } from 'framer-motion'
+import { CalendarClock, AlertCircle } from 'lucide-react'
 
 interface TimetableContainerProps {
-    onDelete?: (id: string) => void;
-    onEdit?: (item: TimetableItem) => void;
+  onDelete?: (id: string) => void
+  onEdit?: (item: TimetableItem) => void
 }
 
 const TimetableContainer: FC<TimetableContainerProps> = ({ onDelete, onEdit }) => {
-    const { items, loading, error, deleteItem, viewType } = useTimetable();
+  const { filteredActiveItems, loading, error, deleteItem, completeItem, archiveItem, viewType } =
+    useTimetable()
 
-    const handleDelete = async (id: string) => {
-        if (window.confirm('Confirm delete? This cannot be undone.')) {
-            await deleteItem(id);
-            if (onDelete) onDelete(id);
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="glass-card p-8 rounded-[2.5rem] opacity-30 animate-pulse bg-base-200 h-64 shadow-none"></div>
-                ))}
-            </div>
-        );
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Confirm delete? This cannot be undone.')) {
+      await deleteItem(id)
+      if (onDelete) onDelete(id)
     }
+  }
 
-    if (error) {
-        return (
-            <div className="alert bg-error/10 border border-error/20 text-error max-w-4xl mx-auto m-8 p-8 rounded-[2.5rem] animate-in shake duration-500">
-                <div className="flex items-center gap-6">
-                    <AlertCircle size={32} />
-                    <div>
-                        <h3 className="font-black uppercase text-xs tracking-widest mb-1 opacity-50">System Error</h3>
-                        <p className="text-xl font-bold">{error}</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+  const handleComplete = async (id: string) => {
+    await completeItem(id)
+  }
 
+  const handleArchive = async (id: string) => {
+    await archiveItem(id)
+  }
+
+  if (loading) {
     return (
-        <AnimatePresence mode="wait">
-            {viewType === 'list' ? (
-                <motion.div 
-                    key="list"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4, ease: "circOut" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 w-full"
-                >
-                    {items.length > 0 ? (
-                        items.map((item) => (
-                            <TimetableCard 
-                                key={item.id}
-                                item={item} 
-                                onDelete={handleDelete}
-                                onEdit={() => onEdit?.(item)} 
-                            />
-                        ))
-                    ) : (
-                        <EmptyState />
-                    )}
-                </motion.div>
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="glass-card bg-base-200 h-64 animate-pulse rounded-[2.5rem] p-8 opacity-30 shadow-none"
+          ></div>
+        ))}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="alert bg-error/10 border-error/20 text-error animate-in shake m-8 mx-auto max-w-4xl rounded-[2.5rem] border p-8 duration-500">
+        <div className="flex items-center gap-6">
+          <AlertCircle size={32} />
+          <div>
+            <h3 className="mb-1 text-xs font-black tracking-widest uppercase opacity-50">
+              System Error
+            </h3>
+            <p className="text-xl font-bold">{error}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <AnimatePresence mode="wait">
+      {viewType === 'list' ? (
+        <motion.div
+          key="list"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2 lg:gap-12"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredActiveItems.length > 0 ? (
+              filteredActiveItems.map((item) => (
+                <TimetableCard
+                  key={item.id}
+                  item={item}
+                  onDelete={handleDelete}
+                  onEdit={() => onEdit?.(item)}
+                  onComplete={handleComplete}
+                  onArchive={handleArchive}
+                />
+              ))
             ) : (
-                <motion.div
-                    key="grid"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.05 }}
-                    transition={{ duration: 0.4, ease: "circOut" }}
-                >
-                    <TimetableGrid 
-                        items={items}
-                        onDelete={handleDelete}
-                        onEdit={onEdit}
-                    />
-                </motion.div>
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="col-span-full"
+              >
+                <EmptyState />
+              </motion.div>
             )}
-        </AnimatePresence>
-    );
-};
+          </AnimatePresence>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="grid"
+          initial={{ opacity: 0, scale: 0.95, rotateX: -10 }}
+          animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+          exit={{ opacity: 0, scale: 1.05, rotateX: 10 }}
+          transition={{ duration: 0.4, ease: 'circOut' }}
+        >
+          {filteredActiveItems.length > 0 ? (
+            <TimetableGrid
+              items={filteredActiveItems}
+              onDelete={handleDelete}
+              onEdit={onEdit}
+              onComplete={handleComplete}
+              onArchive={handleArchive}
+            />
+          ) : (
+            <EmptyState />
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
 const EmptyState = () => (
-    <div className="col-span-full border-2 border-dashed border-base-content/10 bg-base-200/20 py-32 px-10 rounded-[3.5rem] text-center backdrop-blur-sm animate-in zoom-in duration-700">
-        <div className="flex justify-center mb-6 opacity-20">
-            <CalendarClock size={64} strokeWidth={1} />
-        </div>
-        <h3 className="text-3xl font-black text-primary/40 tracking-tighter mb-2 leading-none">Schedule Empty</h3>
-        <p className="text-base-content/30 max-w-sm mx-auto font-bold uppercase text-[10px] tracking-widest">Add a new goal to see it appear here.</p>
+  <div className="border-primary/10 from-primary/5 to-secondary/5 shadow-primary/5 flex flex-col items-center justify-center rounded-3xl border-2 border-dashed bg-gradient-to-br px-6 py-16 text-center shadow-2xl backdrop-blur-md lg:rounded-[4rem] lg:px-10 lg:py-24">
+    <motion.div
+      animate={{
+        y: [0, -15, 0],
+        rotate: [0, 5, -5, 0],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      }}
+      className="text-primary/40 border-primary/10 mb-8 flex justify-center rounded-3xl border bg-white p-6 shadow-2xl"
+    >
+      <CalendarClock size={64} strokeWidth={1.5} />
+    </motion.div>
+    <div className="space-y-4">
+      <h3 className="text-primary text-2xl leading-none font-black tracking-tighter lg:text-4xl">
+        Active Deck Empty
+      </h3>
+      <p className="text-base-content/40 mx-auto max-w-sm text-sm leading-relaxed font-bold">
+        Your schedule is currently clear. Add a new goal to begin tracking, or restore a finished
+        task from history.
+      </p>
+      <div className="flex justify-center gap-2 pt-4" aria-label="Loading schedule">
+        <div className="bg-primary/20 h-2 w-2 animate-bounce rounded-full delay-[0ms]" />
+        <div className="bg-primary/20 h-2 w-2 animate-bounce rounded-full delay-[200ms]" />
+        <div className="bg-primary/20 h-2 w-2 animate-bounce rounded-full delay-[400ms]" />
+      </div>
     </div>
-);
+  </div>
+)
 
-export default TimetableContainer;
+export default TimetableContainer

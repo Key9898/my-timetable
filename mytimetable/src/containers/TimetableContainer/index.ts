@@ -1,2 +1,2 @@
-export * from './TimetableContainer';
-export { default } from './TimetableContainer';
+export * from './TimetableContainer'
+export { default } from './TimetableContainer'

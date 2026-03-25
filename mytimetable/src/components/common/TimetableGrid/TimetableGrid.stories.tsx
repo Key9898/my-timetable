@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import TimetableGrid from './TimetableGrid';
-import type { TimetableItem } from '../../../models/Timetable';
+import type { Meta, StoryObj } from '@storybook/react'
+import TimetableGrid from './TimetableGrid'
+import type { TimetableItem } from '../../../models/Timetable'
 
 const meta: Meta<typeof TimetableGrid> = {
   title: 'Common/TimetableGrid',
@@ -9,10 +9,10 @@ const meta: Meta<typeof TimetableGrid> = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof TimetableGrid>;
+export default meta
+type Story = StoryObj<typeof TimetableGrid>
 
 const mockItems: TimetableItem[] = [
   {
@@ -23,7 +23,10 @@ const mockItems: TimetableItem[] = [
     day: 'Monday',
     room: 'Room 302',
     color: 'blue',
-    isRecurring: true
+    isRecurring: true,
+    status: 'active',
+    createdAt: '2026-03-25T08:00:00.000Z',
+    updatedAt: '2026-03-25T08:00:00.000Z',
   },
   {
     id: '2',
@@ -33,7 +36,10 @@ const mockItems: TimetableItem[] = [
     day: 'Monday',
     room: 'Lab 4',
     color: 'purple',
-    isRecurring: true
+    isRecurring: true,
+    status: 'active',
+    createdAt: '2026-03-25T08:15:00.000Z',
+    updatedAt: '2026-03-25T08:15:00.000Z',
   },
   {
     id: '3',
@@ -43,7 +49,10 @@ const mockItems: TimetableItem[] = [
     day: 'Wednesday',
     room: 'Hall A',
     color: 'emerald',
-    isRecurring: false
+    isRecurring: false,
+    status: 'active',
+    createdAt: '2026-03-25T08:30:00.000Z',
+    updatedAt: '2026-03-25T08:30:00.000Z',
   },
   {
     id: '4',
@@ -53,18 +62,21 @@ const mockItems: TimetableItem[] = [
     day: 'Friday',
     room: 'Studio',
     color: 'rose',
-    isRecurring: true
-  }
-];
+    isRecurring: true,
+    status: 'active',
+    createdAt: '2026-03-25T08:45:00.000Z',
+    updatedAt: '2026-03-25T08:45:00.000Z',
+  },
+]
 
 export const Default: Story = {
   args: {
     items: mockItems,
   },
-};
+}
 
 export const Empty: Story = {
   args: {
     items: [],
   },
-};
+}

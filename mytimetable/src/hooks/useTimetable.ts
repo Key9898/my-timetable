@@ -1,59 +1,117 @@
-import { useTimetableContext } from '../contexts/TimetableContext';
-import type { TimetableItem } from '../models/Timetable';
+import { useTimetableContext } from './useTimetableContext'
+import { useToast } from './useToast'
+import type { TimetableInput, TimetableItem } from '../models/Timetable'
 
-/**
- * useTimetable Hook
- * Centralizing hook for accessing global timetable state and operations.
- */
 export const useTimetable = () => {
-    const { 
-        items, 
-        loading, 
-        error, 
-        fetchTimetable, 
-        addItem, 
-        updateItem, 
-        deleteItem,
-        viewType,
-        setViewType
-    } = useTimetableContext();
+  const {
+    items,
+    searchedItems,
+    activeItems,
+    completedItems,
+    archivedItems,
+    filteredItems,
+    filteredActiveItems,
+    filteredCompletedItems,
+    filteredArchivedItems,
+    searchQuery,
+    setSearchQuery,
+    loading,
+    error,
+    fetchTimetable,
+    addItem,
+    updateItem,
+    deleteItem,
+    completeItem,
+    archiveItem,
+    restoreItem,
+    viewType,
+    setViewType,
+  } = useTimetableContext()
 
-    const handleAddItem = async (item: Omit<TimetableItem, 'id'>) => {
-        try {
-            await addItem(item);
-        } catch (err) {
-            console.error('Add failed:', err);
-            throw err;
-        }
-    };
+  const toast = useToast()
 
-    const handleUpdateItem = async (id: string, updates: Partial<TimetableItem>) => {
-        try {
-            await updateItem(id, updates);
-        } catch (err) {
-            console.error('Update failed:', err);
-            throw err;
-        }
-    };
+  const handleAddItem = async (item: TimetableInput) => {
+    try {
+      await addItem(item)
+      toast.success('Task added successfully')
+    } catch (err) {
+      toast.error('Failed to add task')
+      throw err
+    }
+  }
 
-    const handleDeleteItem = async (id: string) => {
-        try {
-            await deleteItem(id);
-        } catch (err) {
-            console.error('Delete failed:', err);
-            throw err;
-        }
-    };
+  const handleUpdateItem = async (id: string, updates: Partial<TimetableItem>) => {
+    try {
+      await updateItem(id, updates)
+      toast.success('Task updated successfully')
+    } catch (err) {
+      toast.error('Failed to update task')
+      throw err
+    }
+  }
 
-    return {
-        items,
-        loading,
-        error,
-        viewType,
-        setViewType,
-        fetchTimetable,
-        addItem: handleAddItem,
-        updateItem: handleUpdateItem,
-        deleteItem: handleDeleteItem
-    };
-};
+  const handleDeleteItem = async (id: string) => {
+    try {
+      await deleteItem(id)
+      toast.success('Task deleted successfully')
+    } catch (err) {
+      toast.error('Failed to delete task')
+      throw err
+    }
+  }
+
+  const handleCompleteItem = async (id: string) => {
+    try {
+      await completeItem(id)
+      toast.success('Task marked as completed')
+    } catch (err) {
+      toast.error('Failed to complete task')
+      throw err
+    }
+  }
+
+  const handleArchiveItem = async (id: string) => {
+    try {
+      await archiveItem(id)
+      toast.success('Task archived successfully')
+    } catch (err) {
+      toast.error('Failed to archive task')
+      throw err
+    }
+  }
+
+  const handleRestoreItem = async (id: string) => {
+    try {
+      await restoreItem(id)
+      toast.success('Task restored successfully')
+    } catch (err) {
+      toast.error('Failed to restore task')
+      throw err
+    }
+  }
+
+  return {
+    items,
+    searchedItems,
+    activeItems,
+    completedItems,
+    archivedItems,
+    filteredItems,
+    filteredActiveItems,
+    filteredCompletedItems,
+    filteredArchivedItems,
+    searchQuery,
+    setSearchQuery,
+    loading,
+    error,
+    viewType,
+    setViewType,
+    fetchTimetable,
+    addItem: handleAddItem,
+    updateItem: handleUpdateItem,
+    deleteItem: handleDeleteItem,
+    completeItem: handleCompleteItem,
+    archiveItem: handleArchiveItem,
+    restoreItem: handleRestoreItem,
+  }
+}

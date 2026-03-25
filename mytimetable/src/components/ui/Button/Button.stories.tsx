@@ -1,49 +1,49 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Button from './Button';
+import type { Meta, StoryObj } from '@storybook/react'
+import Button from './Button'
 
 const meta: Meta<typeof Button> = {
-    title: 'UI/Button',
-    component: Button,
-    tags: ['autodocs'],
-    argTypes: {
-        variant: {
-            control: 'select',
-            options: ['primary', 'secondary', 'accent', 'outline', 'ghost'],
-        },
-        size: {
-            control: 'select',
-            options: ['sm', 'md', 'lg'],
-        },
+  title: 'UI/Button',
+  component: Button,
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'accent', 'outline', 'ghost'],
     },
-};
+    size: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+    },
+  },
+}
 
-export default meta;
-type Story = StoryObj<typeof Button>;
+export default meta
+type Story = StoryObj<typeof Button>
 
 export const Primary: Story = {
-    args: {
-        children: 'Primary Button',
-        variant: 'primary',
-    },
-};
+  args: {
+    children: 'Primary Button',
+    variant: 'primary',
+  },
+}
 
 export const Secondary: Story = {
-    args: {
-        children: 'Secondary Button',
-        variant: 'secondary',
-    },
-};
+  args: {
+    children: 'Secondary Button',
+    variant: 'secondary',
+  },
+}
 
 export const Outline: Story = {
-    args: {
-        children: 'Outline Button',
-        variant: 'outline',
-    },
-};
+  args: {
+    children: 'Outline Button',
+    variant: 'outline',
+  },
+}
 
 export const Loading: Story = {
-    args: {
-        children: 'Loading...',
-        isLoading: true,
-    },
-};
+  args: {
+    children: 'Loading...',
+    isLoading: true,
+  },
+}
