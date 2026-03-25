@@ -1,12 +1,21 @@
 {
     "name": "chronos-root",
     "private": true,
+    "workspaces": [
+        "mytimetable"
+    ],
     "scripts": {
-        "dev": "npm run dev --prefix mytimetable",
-        "build": "npm run build --prefix mytimetable",
-        "lint": "npm run lint --prefix mytimetable",
+        "dev": "npm run dev -w mytimetable",
+        "build": "npm run build -w mytimetable",
+        "lint": "npm run lint -w mytimetable",
         "format": "prettier --write .",
-        "preview": "npm run preview --prefix mytimetable",
-        "storybook": "npm run storybook --prefix mytimetable"
+        "preview": "npm run preview -w mytimetable",
+        "storybook": "npm run storybook -w mytimetable"
+    },
+    "devDependencies": {
+        "typescript": "~5.9.3",
+        "vite": "^7.2.4",
+        "prettier": "^3.8.1",
+        "prettier-plugin-tailwindcss": "^0.7.2"
     }
 }

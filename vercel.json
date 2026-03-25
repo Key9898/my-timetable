@@ -1,0 +1,5 @@
+{
+    "buildCommand": "npm run build",
+    "outputDirectory": "mytimetable/dist",
+    "framework": "vite"
+}
