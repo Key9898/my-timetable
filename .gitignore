@@ -16,6 +16,10 @@ npm-debug.log*
 # Claude Code
 .claude/
 
+# AI Agents
+.agents/
+.trae/
+
 # OS
 .DS_Store
 Thumbs.db
