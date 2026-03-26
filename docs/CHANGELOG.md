@@ -2,6 +2,26 @@
 
 ဤ project တွင် ပြုလုပ်ခဲ့သမျှသော ပြင်ဆင်မှုများ၊ ထပ်တိုးမှုများ အားလုံးကို ဤနေရာတွင် စနစ်တကျ မှတ်တမ်းတင်သွားမည်။
 
+## [2026-03-26] - Repo Restructure & Vercel Deployment Fix
+
+### Changed
+- **Flat Structure Migration**: Removed nested `mytimetable/` npm workspace. Moved all source files, configs, and assets to repo root for a cleaner, professional structure.
+  - `mytimetable/src/` → `src/`
+  - `mytimetable/public/` → `public/`
+  - `mytimetable/.storybook/` → `.storybook/`
+  - All config files (`vite.config.ts`, `tsconfig*.json`, `eslint.config.js`, etc.) → repo root
+- **package.json Consolidation**: Merged workspace `package.json` into root. Removed npm workspace config. Normalized all Storybook packages to v8.6.x.
+- **vercel.json Update**: Simplified to `outputDirectory: dist` (root-relative). Removed monorepo-specific paths.
+- **ARCHITECTURE.md**: Updated directory structure diagram to reflect flat repo layout and corrected `context/` → `contexts/`.
+- **PROJECT_PLAN.md**: Updated Deployment section with Vercel flat-structure config details.
+
+### Fixed
+- **Vercel Deploy Error**: Resolved `lightningcss.linux-x64-gnu.node` platform binary mismatch by switching from monorepo (workspace root lock file missing Linux binary) to flat structure (single lock file with all platform binaries).
+- **Storybook Import Error**: Fixed `Meta`/`StoryObj` imported from `@storybook/react-vite` → corrected to `@storybook/react` in `ErrorBoundary.stories.tsx` and `Toast.stories.tsx`.
+- **tsconfig.app.json**: Added `exclude: ["src/**/*.stories.tsx"]` to prevent Storybook type errors from breaking the main production build.
+- **ESLint**: Zero errors, zero warnings maintained after restructure.
+- **.gitignore**: Created root `.gitignore` (was missing). Excludes `node_modules/`, `dist/`, `storybook-static/`, `.claude/`, etc.
+
 ## [2026-03-26] - Quality Audit & Logic Refactoring
 
 ### Added

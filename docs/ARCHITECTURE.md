@@ -33,19 +33,25 @@ We follow a **Modular Component Architecture** focused on reusability and scalab
 ## 📂 Directory Structure
 
 ```text
-src/
-├── components/
-│   ├── ui/                 # Atomic UI (Button, Modal, Input) + .stories.tsx
-│   └── common/             # Complex UI (TimetableCard, Navbar) + .stories.tsx
-├── containers/             # Data Orchestration Components
-├── hooks/                  # ALL Smart Logic (useTimetable, etc.)
-├── services/               # Business Logic
-├── utils/                  # Helper Utilities (a11y, formatters)
-├── models/                 # TypeScript Interfaces/Types
-├── pages/                  # Route-level screens
-├── context/                # Global State Management
-├── styles/                 # Global styling (Tailwind v4)
-└── tests/                  # Test suites and Mock Data
+my-timetable/               # Repo root = project root (flat structure)
+├── src/
+│   ├── components/
+│   │   ├── ui/             # Atomic UI (Button, Modal, Input) + .stories.tsx
+│   │   └── common/         # Complex UI (TimetableCard, Navbar) + .stories.tsx
+│   ├── containers/         # Data Orchestration Components
+│   ├── hooks/              # ALL Smart Logic (useTimetable, etc.)
+│   ├── services/           # Business Logic
+│   ├── utils/              # Helper Utilities (a11y, formatters)
+│   ├── models/             # TypeScript Interfaces/Types
+│   ├── pages/              # Route-level screens
+│   ├── contexts/           # Global State Management
+│   ├── styles/             # Global styling (Tailwind v4)
+│   └── test/               # Test suites and Mock Data
+├── public/                 # Static assets (favicons, logo)
+├── .storybook/             # Storybook configuration
+├── package.json
+├── vite.config.ts
+└── vercel.json
 ```
 
 ## 📜 Strict Implementation Rules
