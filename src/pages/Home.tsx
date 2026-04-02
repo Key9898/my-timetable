@@ -1,5 +1,6 @@
 import { useEffect, useState, type FC } from 'react'
 import { ArrowRight, BarChart3, Clock, Grid, History, List, MapPin, Plus } from 'lucide-react'
+import { motion } from 'framer-motion'
 import TimetableContainer from '../containers/TimetableContainer'
 import Button from '../components/ui/Button'
 import Modal from '../components/ui/Modal'
@@ -167,10 +168,17 @@ const Home: FC<HomeProps> = ({ onNavigate }) => {
 
       <div className="mx-auto mb-10 w-full max-w-6xl px-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <button
+          <motion.button
             type="button"
             onClick={() => onNavigate('/analytics')}
-            className="group border-secondary/20 bg-secondary/5 dark:bg-secondary/10 shadow-secondary/5 hover:bg-secondary/10 dark:hover:bg-secondary/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1"
+            initial={{ y: 0 }}
+            animate={{ y: [0, -8, 0] }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="group border-secondary/20 bg-secondary/5 dark:bg-secondary/10 shadow-secondary/5 hover:bg-secondary/10 dark:hover:bg-secondary/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:scale-[1.02!important] active:scale-95"
           >
             <p className="text-secondary text-[11px] font-black tracking-[0.1em] uppercase">
               Live Focus
@@ -187,12 +195,20 @@ const Home: FC<HomeProps> = ({ onNavigate }) => {
                 size={24}
               />
             </div>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             type="button"
             onClick={() => onNavigate('/analytics')}
-            className="group border-primary/20 bg-primary/5 dark:bg-primary/10 shadow-primary/5 hover:bg-primary/10 dark:hover:bg-primary/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1"
+            initial={{ y: 0 }}
+            animate={{ y: [0, -12, 0] }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 0.5,
+            }}
+            className="group border-primary/20 bg-primary/5 dark:bg-primary/10 shadow-primary/5 hover:bg-primary/10 dark:hover:bg-primary/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:scale-[1.02!important] active:scale-95"
           >
             <p className="text-primary text-[11px] font-black tracking-[0.1em] uppercase">
               Execution Rate
@@ -211,12 +227,20 @@ const Home: FC<HomeProps> = ({ onNavigate }) => {
                 size={24}
               />
             </div>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             type="button"
             onClick={() => onNavigate('/history')}
-            className="group border-accent/20 bg-accent/5 dark:bg-accent/10 shadow-accent/5 hover:bg-accent/10 dark:hover:bg-accent/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:-translate-y-1"
+            initial={{ y: 0 }}
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 5.5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 0.2,
+            }}
+            className="group border-accent/20 bg-accent/5 dark:bg-accent/10 shadow-accent/5 hover:bg-accent/10 dark:hover:bg-accent/15 rounded-[2.5rem] border-2 p-6 text-left shadow-xl backdrop-blur-xl transition-all hover:scale-[1.02!important] active:scale-95"
           >
             <p className="text-accent text-[11px] font-black tracking-[0.1em] uppercase">
               History Vault
@@ -235,7 +259,7 @@ const Home: FC<HomeProps> = ({ onNavigate }) => {
                 size={24}
               />
             </div>
-          </button>
+          </motion.button>
         </div>
       </div>
 

@@ -1,17 +1,27 @@
+import {
+  collection,
+  doc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  where,
+} from 'firebase/firestore'
+import { db } from '../lib/firebase'
 import type { TimetableInput, TimetableItem, TimetableStatus } from '../models/Timetable'
-import { mapTimetableItems } from '../mappers/timetableMapper'
-import { MOCK_TIMETABLE_DATA, mockApiResponse } from '../mocks/timetableMock'
 
-const STORAGE_KEY = 'my_timetable_data'
-const USE_MOCK = true // Still use mock for initial load if no data in Storage
+const COLLECTION_NAME = 'timetables'
 
 const createId = () => Math.random().toString(36).slice(2, 11)
 
-const normalizeTimetableItem = (item: Partial<TimetableItem>): TimetableItem => {
+const normalizeTimetableItem = (item: Partial<TimetableItem>, id?: string): TimetableItem => {
   const createdAt = item.createdAt || item.updatedAt || new Date().toISOString()
 
   return {
-    id: item.id || createId(),
+    id: id || item.id || createId(),
+    userId: item.userId || '',
     subject: item.subject || 'Untitled Task',
     startTime: item.startTime || '00:00',
     endTime: item.endTime || '00:00',
@@ -25,10 +35,6 @@ const normalizeTimetableItem = (item: Partial<TimetableItem>): TimetableItem => 
     completedAt: item.completedAt,
     archivedAt: item.archivedAt,
   }
-}
-
-const persistItems = (items: TimetableItem[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
 }
 
 const applyStatusTransition = (
@@ -65,70 +71,71 @@ const applyStatusTransition = (
 }
 
 export const timetableService = {
-  getTimetable: async (): Promise<TimetableItem[]> => {
-    const storedItems = localStorage.getItem(STORAGE_KEY)
+  getTimetable: async (userId: string): Promise<TimetableItem[]> => {
+    const timetablesRef = collection(db, COLLECTION_NAME)
+    const q = query(timetablesRef, where('userId', '==', userId), orderBy('createdAt', 'desc'))
+    const snapshot = await getDocs(q)
 
-    if (storedItems) {
-      const normalizedItems = JSON.parse(storedItems).map(normalizeTimetableItem)
-      persistItems(normalizedItems)
-      return normalizedItems
-    }
+    const items: TimetableItem[] = []
+    snapshot.forEach((doc) => {
+      const data = doc.data()
+      items.push(normalizeTimetableItem(data, doc.id))
+    })
 
-    // Default to mock data if nothing in LocalStorage
-    if (USE_MOCK) {
-      const data = await mockApiResponse(MOCK_TIMETABLE_DATA)
-      const mapped = mapTimetableItems(data)
-      persistItems(mapped)
-      return mapped
-    }
-
-    return []
+    return items
   },
 
-  addItem: async (item: TimetableInput): Promise<TimetableItem> => {
-    const items = await timetableService.getTimetable()
+  addItem: async (item: TimetableInput, userId: string): Promise<TimetableItem> => {
     const now = new Date().toISOString()
-    const newItem: TimetableItem = {
+    const newItem: Omit<TimetableItem, 'id'> = {
       ...item,
-      id: createId(),
+      userId,
       status: 'active',
       createdAt: now,
       updatedAt: now,
     }
 
-    const updatedItems = [...items, newItem]
-    persistItems(updatedItems)
-    return newItem
+    const docRef = await addDoc(collection(db, COLLECTION_NAME), newItem)
+
+    return {
+      id: docRef.id,
+      ...newItem,
+    }
   },
 
   updateItem: async (id: string, updates: Partial<TimetableItem>): Promise<TimetableItem> => {
-    const items = await timetableService.getTimetable()
-    const existingIndex = items.findIndex((item) => item.id === id)
-
-    if (existingIndex === -1) throw new Error('Item not found')
-
-    const currentItem = items[existingIndex]
+    const docRef = doc(db, COLLECTION_NAME, id)
     const updatedAt = new Date().toISOString()
 
-    let updatedItem = normalizeTimetableItem({
-      ...currentItem,
+    const updatedData: Partial<TimetableItem> = {
       ...updates,
       updatedAt,
-    })
-
-    if (updates.status && updates.status !== currentItem.status) {
-      updatedItem = applyStatusTransition(updatedItem, updates.status, updatedAt)
     }
 
-    items[existingIndex] = updatedItem
+    if (updates.status) {
+      const currentItem = normalizeTimetableItem(updates, id)
+      const transitionedItem = applyStatusTransition(currentItem, updates.status, updatedAt)
+      Object.assign(updatedData, {
+        status: transitionedItem.status,
+        completedAt: transitionedItem.completedAt,
+        archivedAt: transitionedItem.archivedAt,
+      })
+    }
 
-    persistItems(items)
-    return updatedItem
+    await updateDoc(docRef, updatedData)
+
+    return normalizeTimetableItem(
+      {
+        ...updates,
+        ...updatedData,
+        id,
+      },
+      id,
+    )
   },
 
   deleteItem: async (id: string): Promise<void> => {
-    const items = await timetableService.getTimetable()
-    const filteredItems = items.filter((item) => item.id !== id)
-    persistItems(filteredItems)
+    const docRef = doc(db, COLLECTION_NAME, id)
+    await deleteDoc(docRef)
   },
 }

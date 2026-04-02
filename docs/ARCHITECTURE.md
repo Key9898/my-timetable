@@ -69,3 +69,5 @@ my-timetable/               # Repo root = project root (flat structure)
 5. [x] Setup Storybook for Component Documentation.
 6. [x] Refactor existing Smart components to Containers/Hooks.
 7. [x] Implement Core Timetable Logic in Hooks & Context API.
+8. [x] Migrate persistence to Firebase Firestore with Anonymous Auth.
+9. [x] Implement Premium UI/UX Polish (Floating Animations & High-Fidelity Skeletons).

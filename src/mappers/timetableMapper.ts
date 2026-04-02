@@ -2,6 +2,7 @@ import type { DayOfWeek, ItemColor, TimetableItem, TimetableStatus } from '../mo
 
 export interface ApiTimetableItem {
   id?: string
+  userId?: string
   title?: string
   start?: string
   end?: string
@@ -23,6 +24,7 @@ export const mapApiToTimetableItem = (apiData: ApiTimetableItem): TimetableItem 
 
   return {
     id: apiData.id || createId(),
+    userId: apiData.userId || '',
     subject: apiData.title || 'No Subject',
     startTime: apiData.start || '00:00',
     endTime: apiData.end || '00:00',

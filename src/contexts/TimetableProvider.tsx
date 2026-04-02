@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { TimetableContext } from './TimetableContext'
+import { AuthContext } from './AuthContext'
 import type { TimetableInput, TimetableItem } from '../models/Timetable'
 import { timetableService } from '../services/timetableService'
 
@@ -9,6 +10,15 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [viewType, setViewType] = useState<'list' | 'grid'>('list')
+
+  const authContext = React.useContext(AuthContext)
+
+  if (!authContext) {
+    throw new Error('TimetableProvider must be used within an AuthProvider')
+  }
+
+  const { user } = authContext
+  const userId = user?.uid
 
   const matchesSearch = (item: TimetableItem) =>
     item.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -26,9 +36,11 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const filteredItems = filteredActiveItems
 
   const fetchTimetable = useCallback(async () => {
+    if (!userId) return
+
     try {
       setLoading(true)
-      const data = await timetableService.getTimetable()
+      const data = await timetableService.getTimetable(userId)
       setItems(data)
       setError(null)
     } catch {
@@ -36,13 +48,17 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [userId])
 
   useEffect(() => {
-    fetchTimetable()
-  }, [fetchTimetable])
+    if (userId) {
+      fetchTimetable()
+    }
+  }, [userId, fetchTimetable])
 
   const addItem = async (item: TimetableInput) => {
+    if (!userId) throw new Error('User not authenticated')
+
     const hasConflict = activeItems.some(
       (existing) =>
         existing.day === item.day &&
@@ -57,7 +73,7 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       throw new Error('Task timing conflict')
     }
 
-    const newItem = await timetableService.addItem(item)
+    const newItem = await timetableService.addItem(item, userId)
     setItems((prev) => [...prev, newItem])
   }
 

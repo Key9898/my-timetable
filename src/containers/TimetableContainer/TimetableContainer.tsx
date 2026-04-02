@@ -34,10 +34,36 @@ const TimetableContainer: FC<TimetableContainerProps> = ({ onDelete, onEdit }) =
     return (
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
         {[1, 2, 3, 4].map((i) => (
-          <div
+          <motion.div
             key={i}
-            className="glass-card bg-base-200 h-64 animate-pulse rounded-[2.5rem] p-8 opacity-30 shadow-none"
-          ></div>
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: [0.5, 0.7, 0.5] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="glass-card bg-base-content/5 relative h-64 overflow-hidden rounded-[2.5rem] shadow-none"
+          >
+            <motion.div
+              animate={{
+                x: ['-100%', '200%'],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+              className="absolute inset-0 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/10 to-transparent"
+            />
+            <div className="flex h-full flex-col justify-between p-8">
+              <div className="space-y-4">
+                <div className="bg-base-content/10 h-6 w-32 rounded-full" />
+                <div className="bg-base-content/10 h-10 w-full rounded-2xl" />
+              </div>
+              <div className="bg-base-content/5 h-12 w-full rounded-2xl" />
+            </div>
+          </motion.div>
         ))}
       </div>
     )

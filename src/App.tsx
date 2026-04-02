@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { AuthProvider } from './contexts/AuthProvider'
 import { TimetableProvider } from './contexts/TimetableProvider'
 import { ToastProvider } from './contexts/ToastProvider'
 import Navbar from './components/common/Navbar'
@@ -68,12 +69,14 @@ function AppShell() {
 function App() {
   return (
     <ErrorBoundary>
-      <ToastProvider>
-        <TimetableProvider>
-          <Toast />
-          <AppShell />
-        </TimetableProvider>
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <TimetableProvider>
+            <Toast />
+            <AppShell />
+          </TimetableProvider>
+        </ToastProvider>
+      </AuthProvider>
     </ErrorBoundary>
   )
 }

@@ -23,6 +23,7 @@ export interface TimetableInput {
 
 export interface TimetableItem extends TimetableInput {
   id: string
+  userId: string
   status: TimetableStatus
   createdAt: string
   updatedAt: string

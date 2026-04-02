@@ -2,6 +2,42 @@
 
 ဤ project တွင် ပြုလုပ်ခဲ့သမျှသော ပြင်ဆင်မှုများ၊ ထပ်တိုးမှုများ အားလုံးကို ဤနေရာတွင် စနစ်တကျ မှတ်တမ်းတင်သွားမည်။
 
+## [2026-04-02] - Dashboard & Skeleton UI Premium Upgrades
+
+### Added
+- **Floating Stats Cards**: Implemented premium floating animations for Dashboard stats cards (Live Focus, Execution Rate, History Vault) using `framer-motion` to improve page dynamism.
+- **High-Fidelity Glassmorphism Skeletons**: Upgraded the standard pulse skeleton to a premium glassmorphism version with an animated shine effect and structural layout placeholders for a superior loading experience.
+
+### Changed
+- **Home.tsx**: Migrated static stats buttons to `motion.button` with staggered y-axis floating effects.
+- **TimetableContainer.tsx**: Replaced the simple pulse skeleton with a multi-layered motion skeleton (shine + placeholders).
+
+## [2026-04-02] - Firebase Firestore Integration
+
+### Added
+- **Firebase SDK Integration**: Installed `firebase` package for backend services.
+- **Firebase Configuration**: Created `src/firebaseConfig.ts` with project credentials.
+- **Firestore Service**: Migrated `src/services/timetableService.ts` from LocalStorage to Firestore.
+  - All CRUD operations now use Firestore database.
+  - User-based data isolation with `userId` filtering.
+  - Real-time data sync capability.
+- **Anonymous Authentication**: Implemented `src/contexts/AuthProvider.tsx` with Firebase Anonymous Auth.
+  - Auto sign-in on page load.
+  - Unique user ID generation for data isolation.
+- **Timetable Model Update**: Added `userId` field to `TimetableItem` type for user ownership.
+
+### Changed
+- **TimetableProvider Integration**: Updated to use `AuthContext` for user ID before fetching data.
+- **App Provider Hierarchy**: Reorganized to `AuthProvider → ToastProvider → TimetableProvider`.
+
+### Removed
+- **firestore.rules & firestore.indexes.json**: Deleted local rule files. User will manage directly in Firebase Console.
+- **Empty mytimetable folder**: Removed unused empty folder from project root.
+
+### Technical Notes
+- **Firestore Security Rules**: Configured in Firebase Console for user-based access control.
+- **Firestore Index**: Created compound index on `timetables` collection (`userId` Ascending + `createdAt` Descending).
+
 ## [2026-03-26] - ErrorBoundary UI/UX Modernization
  
 ### Changed
